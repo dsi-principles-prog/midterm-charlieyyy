@@ -1,0 +1,24 @@
+---
+title: "40-modelling"
+output: html_notebook
+---
+
+# prepare the data for modelling
+
+
+```{r feature table}
+vehicle_model <- vehicle_features %>% 
+  select(axis_svar_diff, comp_ovr_avg, elong_ovr_avg, mlr_ovr_avg)
+```
+
+
+```{r prepare train, validation and test set for modeling}
+set.seed(1015)
+train_sub <- sample(nrow(vehicle_model),0.7*nrow(vehicle_model))
+train_set <- vehicle_model[train_sub,]
+val_test_set <- vehicle_model[-train_sub,]
+val_sub <- sample(nrow(val_test_set), 0.5*nrow(val_test_set))
+val_set <- val_test_set[val_sub,]
+test_set <- val_test_set[-val_sub,]
+```
+

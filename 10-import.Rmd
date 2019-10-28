@@ -1,0 +1,63 @@
+---
+title: "10-import"
+output: html_notebook
+---
+
+
+# objective 
+
+The purpose of this project is to classify a given silhouette as one of four types of vehicle,  using a set of features extracted from the silhouette. 
+
+The vehicle may be viewed from one of many different angles.The features were extracted from the silhouettes by the HIPS (Hierarchical Image Processing Sys-tem) extension BINATTS. Detailed explanation of column variable could be found at https://cran.r-project.org/web/packages/mlbench/mlbench.pdf.
+
+Four "Corgie" model vehicles were used for the experiment: a double decker bus, Cheverolet van,Saab 9000 and an Opel Manta 400.  This particular combination of vehicles was chosen with theexpectation that the bus, van and either one of the cars would be readily distinguishable, but it wouldbe more difficult to distinguish between the cars
+
+
+# import packages
+First of all, let us set up the packages and import the data.
+
+```{r import packages}
+library(tidyverse)
+library(dplyr)
+library(janitor)
+library(assertr)
+```
+
+
+# import data
+
+```{r import data}
+vehicle <- read.csv('Vehicle.csv')
+```
+
+
+# clean names
+```{r clean names}
+vehicle <- vehicle %>% clean_names()
+```
+
+
+
+# assert and verify data
+We want to make sure we have 19 variables(columns), and the class of car is not null. 
+```{r assert and verify data}
+vehicle %>% 
+  chain_start %>%
+  verify(ncol(vehicle)==19) %>% 
+  verify(!is.na(class)) %>% 
+  chain_end()
+```
+
+
+
+# data cleanning
+
+Let us see if all the columns are numeric except class.
+```{r str of data}
+str(vehicle)
+```
+That is great. Let us see if the each column has any null values, and replace NA with the average of the columns.
+
+```{r remove rows with NAs}
+vehicle %>% drop_na()
+```

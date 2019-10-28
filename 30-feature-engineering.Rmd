@@ -1,0 +1,74 @@
+---
+title: "30-feature-engineering"
+output: html_notebook
+---
+
+# feature engieering: the absolute difference between scaled variance of major and scaled variance of minor axis 
+
+The scaled variance in of the car has influence on how the car will look like, so the first feature is to calculate the absolute difference between scaled variance of major and scaled variance of minor axis.
+
+```{r feature engineering 1}
+svar_diff <- function(df, svar1, svar2){
+  df<- df %>% 
+    mutate(svar_diff = abs({{svar1}} -{{svar2}}))
+}
+```
+
+# feature engieering: difference between compactness and average compactness
+
+Compactness definitely have effects on how the car will look like, so the for the second feature, we calculate the difference between compactness and average compactness.
+
+
+```{r feature engineering 2}
+comp_diff <- function(df, comp){
+  df<- df %>% 
+    mutate(comp_diff = {{comp}}-mean({{comp}}))
+}
+```
+
+
+
+# feature engieering: circularity 
+```{r}
+summary(vehicle['circ'])
+```
+
+Circularity definitedly has impact on the shape of the car, so we would love to label the obeservations 0, 1, 2, where 0 means it is in first quantile(circ<40), 1 means that it is in middle quantile (40<circ<49), 2 means that it is above third quantile(circ>49).
+
+Goal: Create a new column with values range from 0, 1, 2 as described above.
+      Name this new column as `circ_q`
+
+```{r feature engineering 3}
+get_circ_q<- function(df, circ){
+  df<- df %>% 
+    # to do: 
+}
+```
+
+
+# feature engieering: axis aspect ratio
+
+The aspect ratio of the axis, `pr_axis_ra`, is the result of minor axis)/major axis. So if the minor axis is very closed to major axis it will have effects on the shape of the car, meaning that it could have use in determining which class the car is.
+
+Goal: Having a `pr_axis_ra` above average value of`pr_axis_ra` will be labeled as 1, otherwise 0. Name this new column named `axisra_above`
+
+```{r feature engineering 4}
+get_ra <- function(df, pr_axis_ra){
+  df<- df %>% 
+   # to do:
+}
+```
+
+
+
+Let us first generate the four features and check if it works.
+```{r create features}
+vehicle_features <- vehicle %>% 
+  svar_diff(sc_var_maxis, sc_var_maxis_2) %>% 
+  comp_diff(comp) %>% 
+  get_circ_q(elong) %>% 
+  get_ra(max_l_rect)
+names(vehicle_features)
+```
+
+Yes, it works! Now, let us create a table with only this four features and split the train and test data. 
