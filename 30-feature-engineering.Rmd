@@ -58,9 +58,9 @@ summary(vehicle['circ'])
 Circularity definitedly has impact on the shape of the car, so we would love to label the obeservations 0, 1, 2, where 0 means it is in first quantile(circ<40), 1 means that it is in middle quantile (40<=circ<=49), 2 means that it is above third quantile(circ>49).
 
 
-Goal: Create a new column with values range from 0, 1, 2 as described above.
-      0: circ <40; 1: 40<= circ <=49 2: circ>49
-      Name this new column as `circ_q`
+Goal: 1. Create a new column with values range from 0, 1, 2 as described above.
+         0: circ <40; 1: 40<= circ <=49 2: circ>49
+      2. Name this new column as `circ_q`
 
 ```{r feature engineering 3}
 get_circ_q<- function(df, circ){
@@ -76,7 +76,7 @@ To verify the functions work, we could use assert to make sure the values are in
 # to do:
 vehicle %>% 
   get_circ_q(circ) %>% 
-  assert(,circ_q) %>% 
+  # use assert 
   select(class,circ_q, everything())
 ```
 
@@ -87,10 +87,9 @@ vehicle %>%
 The aspect ratio of the axis, `pr_axis_ra`, is the result of minor axis)/major axis. So if the minor axis is very closed to major axis it will have effects on the shape of the car, meaning that it could have use in determining which class the car is.
 
 Goal:
-Having a `pr_axis_ra` above average value of`pr_axis_ra` will be labeled as 1, otherwise 0. 
+1. Having a `pr_axis_ra` above average value of`pr_axis_ra` will be labeled as 1, otherwise 0. 
 (pr_axis_ra>mean(pr_axis_ra)-> 1 otherwise 0)
-
-Name this new column named `axisra_above`
+2. Name this new column named `axisra_above`
 
 ```{r feature engineering 4}
 get_ra <- function(df, pr_axis_ra){
@@ -107,7 +106,7 @@ Hint: use `in_set`
 # to do:
 vehicle %>% 
   get_ra(pr_axis_ra) %>% 
-  assert(,axisra_above) %>% 
+  # use assert
   select(class,axisra_above, everything())
 ```
 
@@ -118,8 +117,13 @@ Let us first generate the four features and check if it works.
 vehicle_features <- vehicle %>% 
   svar_diff(sc_var_maxis, sc_var_maxis_2) %>% 
   comp_diff(comp) %>% 
-  get_circ_q() %>%       # to do:
-  get_ra()               # to do:
+  get_circ_q() %>%           # to do:
+  get_ra() %>%               # to do:
+  assert(within_bounds(0,Inf),svar_diff) %>% 
+  assert(not_na, diffc) %>% 
+  assert() %>%               # to do:
+  assert() %>%               # to do:
+  select(class, everything())
 names(vehicle_features)
 ```
 
