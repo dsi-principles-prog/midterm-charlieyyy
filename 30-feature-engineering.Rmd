@@ -121,11 +121,11 @@ Let us first generate the four features and check if it works.
 vehicle_features <- vehicle %>% 
   svar_diff(sc_var_maxis, sc_var_maxis_2) %>% 
   comp_diff(comp) %>% 
-  get_circ_q() %>%           # to do:
+  get_circ_q(circ) %>%  # to do:
   get_ra() %>%               # to do:
   assert(within_bounds(0,Inf),svar_diff) %>% 
   assert(not_na, diffc) %>% 
-  assert() %>%               # to do:
+  assert(in_set(0,1,2), cirq_q) %>%  # to do:
   assert() %>%               # to do:
   select(class, everything())
 names(vehicle_features)
